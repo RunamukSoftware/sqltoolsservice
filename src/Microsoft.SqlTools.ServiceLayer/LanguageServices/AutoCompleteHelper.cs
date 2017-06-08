@@ -524,6 +524,11 @@ namespace Microsoft.SqlTools.ServiceLayer.LanguageServices
                             waitForLockTimeout: AutoCompleteHelper.PrepopulateBindTimeout,
                             bindOperation: (bindingContext, cancelToken) =>
                             {
+                                if (bindingContext.Binder == null)
+                                {
+                                    return null;
+                                }
+
                                 // parse a simple statement that returns common metadata
                                 ParseResult parseResult = Parser.Parse(
                                     "select ", 

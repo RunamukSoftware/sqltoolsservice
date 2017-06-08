@@ -15,7 +15,7 @@ using System.Xml;
 
 namespace Microsoft.SqlTools.ServiceLayer.Admin
 {
-    public class DatabaseTaskHelper
+    public class DatabaseTaskHelper : IDisposable
     {
         private DatabasePrototype prototype;
 
@@ -41,6 +41,11 @@ namespace Microsoft.SqlTools.ServiceLayer.Admin
         public DatabaseTaskHelper(CDataContainer context)
         {
             Initialize(context);
+        }
+
+        ~DatabaseTaskHelper()
+        {
+            Dispose(false);
         }
 
         internal void Initialize(CDataContainer context)
@@ -179,6 +184,31 @@ namespace Microsoft.SqlTools.ServiceLayer.Admin
 
             }
             return prototype;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// MUST be called, as we'll be closing SQL connection inside this call
+        /// </summary>
+        private void Dispose(bool disposing)
+        {           
+            try
+            {
+                if (this.DataContainer != null)
+                {
+                    this.DataContainer.Dispose();
+                    this.prototype.Clear();
+                    this.prototype = null;
+                } 
+            }
+            catch (Exception)
+            {               
+            }
         }
     }
 }

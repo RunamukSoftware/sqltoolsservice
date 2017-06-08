@@ -1181,6 +1181,9 @@ namespace Microsoft.SqlTools.ServiceLayer.Admin
                         {
                             if (this.ownConnection)
                             {
+                                this.sqlCiWithConnection.ServerConnection.Disconnect();
+                                this.sqlCiWithConnection.ServerConnection = null;
+
                                 this.sqlCiWithConnection.Dispose();//internally will decide whether to disconnect or not
                             }
                         }

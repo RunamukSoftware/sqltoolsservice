@@ -31,13 +31,16 @@ namespace Microsoft.SqlTools.ServiceLayer.Test.Common
         }
 
         private static object _lockObject = new object();
-        private static TestServiceProvider _instance = new TestServiceProvider();
-
+        private static TestServiceProvider _instance;
 
         public static TestServiceProvider Instance
         {
             get
             {
+                if (_instance == null)
+                {
+                    _instance = new TestServiceProvider();
+                }
                 return _instance;
             }
         }

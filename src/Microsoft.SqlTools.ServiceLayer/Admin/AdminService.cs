@@ -88,13 +88,22 @@ namespace Microsoft.SqlTools.ServiceLayer.Admin
                 optionsParams.OwnerUri,
                 out connInfo);
 
-            if (taskHelper == null)
+            using (var helper = CreateDatabaseTaskHelper(connInfo))
             {
-                taskHelper = CreateDatabaseTaskHelper(connInfo);
+                if (helper != null)
+                {
+                    response.DefaultDatabaseInfo = DatabaseTaskHelper.DatabasePrototypeToDatabaseInfo(helper.Prototype);
+                }
+                await requestContext.SendResult(response);
             }
 
-            response.DefaultDatabaseInfo = DatabaseTaskHelper.DatabasePrototypeToDatabaseInfo(taskHelper.Prototype);
-            await requestContext.SendResult(response);
+            // if (taskHelper == null)
+            // {
+            //     taskHelper = CreateDatabaseTaskHelper(connInfo);
+            // }
+
+            // response.DefaultDatabaseInfo = DatabaseTaskHelper.DatabasePrototypeToDatabaseInfo(taskHelper.Prototype);
+            // await requestContext.SendResult(response);
         }
 
         /// <summary>
